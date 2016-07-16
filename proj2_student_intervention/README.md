@@ -1,9 +1,27 @@
 # Project 2: Supervised Learning
 ## Building a Student Intervention System
 
+### Project Description
+
 As education has grown to rely more on technology, vast amounts of data has become available for examination and prediction. Logs of student activities, grades, interactions with teachers and fellow students, and more, are now captured in real time through learning management systems like Canvas and Edmodo. This is especially true for online classrooms, which are becoming popular even at the primary and secondary school level. Within all levels of education, there exists a push to help increase the likelihood of student success, without watering down the education or engaging in behaviors that fail to improve the underlying issues. Graduation rates are often the criteria of choice, and educators seek new ways to predict the success and failure of students early enough to stage effective interventions.
 
 A local school district has a goal to reach a 95% graduation rate by the end of the decade by identifying students who need intervention before they drop out of school. As a software engineer contacted by the school district, your task is to model the factors that predict how likely a student is to pass their high school final exam, by constructing an intervention system that leverages supervised learning techniques. The board of supervisors has asked that you find the most effective model that uses the least amount of computation costs to save on the budget. You will need to analyze the dataset on students' performance and develop a model that will predict the likelihood that a given student will pass, quantifying whether an intervention is necessary.
+
+### Project Highlights
+
+- 1. Data preprocessing. Calulate the statistics of the data. Identify feature and target columns. Split data.
+- 2. Training and Evaluating Models. Pros and cons of models are compared. Different data size effect on learning curve. 
+- 3. Best Model selection by F1 score and time efficiency with limited data and resources.
+
+ PREVIOUS
+
+### Deliverables
+
+The following files should be included as your submission, and can be packaged as a single zip file for convenience:
+
+- The `student_intervention.ipynb` file with fully implemented, functional code, with all code blocks executed and showing output.
+- An HTML or PDF report of the project (you may either export the notebook as HTML with your answers included, or submit a separate PDF with only the questions and your answers).
+
 
 ### Install
 
