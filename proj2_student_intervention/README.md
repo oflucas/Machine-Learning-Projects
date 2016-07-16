@@ -13,8 +13,6 @@ A local school district has a goal to reach a 95% graduation rate by the end of 
 - Training and Evaluating Models. Pros and cons of models are compared. Different data size effect on learning curve. 
 - Best Model selection by F1 score and time efficiency with limited data and resources.
 
- PREVIOUS
-
 ### Deliverables
 
 The following files should be included as your submission, and can be packaged as a single zip file for convenience:
