@@ -6,7 +6,7 @@ from simulator import Simulator
 class LearningAgent(Agent):
     """An agent that learns to drive in the smartcab world."""
     ALFA = 0.15     # Learning Rate
-    GAMMA = 0.95     # Decay Rate
+    GAMMA = 0.95     # Discount Factor
 
     def __init__(self, env):
         super(LearningAgent, self).__init__(env)  # sets self.env = env, state = None, next_waypoint = None, and a default color
@@ -16,9 +16,9 @@ class LearningAgent(Agent):
         self.lastState = None
         self.reward = 0
         self.Q = {}
-        self.EPSON = 1.8     # Explore Probability
+        self.EPSON = 1.8     # Explore Probability (1.8)
         self.nTrials = 100
-        self.kEpson = -0.02 # Epson dcrease slope
+        self.kEpson = -0.02 # Epson dcrease slope (-0.02)
         self.t = 0          # Trial time
         self.track_epson = []
 
@@ -79,7 +79,7 @@ class LearningAgent(Agent):
             #print "choose to explore"
             return random.choice(Environment.valid_actions)
         else:
-            #print "choose to used learned"
+            #print "choose to use learned"
             maxQ = None
             maxAction = None
             first = True
@@ -99,7 +99,7 @@ def run():
     # Set up environment and agent
     e = Environment()  # create environment (also adds some dummy traffic)
     a = e.create_agent(LearningAgent)  # create agent
-    e.set_primary_agent(a, enforce_deadline=False)  # specify agent to track
+    e.set_primary_agent(a, enforce_deadline=True)  # specify agent to track
     # NOTE: You can set enforce_deadline=False while debugging to allow longer trials
 
     # Now simulate it
@@ -109,9 +109,9 @@ def run():
     sim.run(n_trials=100)  # run for a specified number of trials
     # NOTE: To quit midway, press Esc or close pygame window, or hit Ctrl+C on the command-line
     
-    # Visualize the train result
-    #sim = Simulator(e, update_delay=1, display=True)
-    #sim.run(n_trials=3)
+    #Visualize the train result
+    sim = Simulator(e, update_delay=1, display=True)
+    sim.run(n_trials=3)
 
     # Analysis
     print "DEADLINE TRACK: \n", e.track_deadline

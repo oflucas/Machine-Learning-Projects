@@ -154,6 +154,8 @@ class Environment(object):
             elif self.enforce_deadline and agent_deadline <= 0:
                 self.done = True
                 print "Environment.step(): Primary agent ran out of time! Trial aborted."
+                self.track_deadline.append(self.trial_data['final_deadline'])
+                self.track_net_reward.append(self.trial_data['net_reward'])
             self.agent_states[self.primary_agent]['deadline'] = agent_deadline - 1
 
         self.t += 1
