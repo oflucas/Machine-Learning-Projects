@@ -9,11 +9,9 @@ A local school district has a goal to reach a 95% graduation rate by the end of 
 
 ### Project Highlights
 
-- 1. Data preprocessing. Calulate the statistics of the data. Identify feature and target columns. Split data.
-- 2. Training and Evaluating Models. Pros and cons of models are compared. Different data size effect on learning curve. 
-- 3. Best Model selection by F1 score and time efficiency with limited data and resources.
-
- PREVIOUS
+- Data preprocessing. Calulate the statistics of the data. Identify feature and target columns. Split data.
+- Training and Evaluating Models. Pros and cons of models are compared. Different data size effect on learning curve. 
+- Best Model selection by F1 score and time efficiency with limited data and resources.
 
 ### Deliverables
 
