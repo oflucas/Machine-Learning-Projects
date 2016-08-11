@@ -5,27 +5,32 @@ from simulator import Simulator
 
 class LearningAgent(Agent):
     """An agent that learns to drive in the smartcab world."""
-    ALFA = 0.15     # Learning Rate
-    GAMMA = 0.95     # Discount Factor
+    ALFA = 0.5     # Learning Rate
+    GAMMA = 0.5     # Discount Factor
 
     def __init__(self, env):
         super(LearningAgent, self).__init__(env)  # sets self.env = env, state = None, next_waypoint = None, and a default color
         self.color = 'red'  # override color
         self.planner = RoutePlanner(self.env, self)  # simple route planner to get next_waypoint
+        
         # TODO: Initialize any additional variables here
+        self.EPSON = 0.1     # Explore Probability
+        self.nTrials = 100
+        self.kEpson = -0.01 # Epson dcrease slope
+        self.qInit = 2 # Q table initial values
+
         self.lastState = None
+        self.lastAction = None
         self.reward = 0
         self.Q = {}
-        self.EPSON = 1.8     # Explore Probability (1.8)
-        self.nTrials = 100
-        self.kEpson = -0.02 # Epson dcrease slope (-0.02)
-        self.t = 0          # Trial time
+        self.t = 0          # Trial times count
         self.track_epson = []
 
     def reset(self, destination=None):
         self.planner.route_to(destination)
         # TODO: Prepare for a new trip; reset any variables here, if required
         self.lastState = None
+        self.lastAction = None
         self.reward = 0
         self.t += 1
         self.track_epson.append(100 * min(1, max(0, self.EPSON + self.kEpson * self.t)))
@@ -36,42 +41,38 @@ class LearningAgent(Agent):
         inputs = self.env.sense(self)
         deadline = self.env.get_deadline(self)
 
-        # TODO: Select action according to your policy
-        action = self.takeAction([str(inputs), deadline, self.next_waypoint, ''])
+        # TODO: Update state && state defination
+        self.state = (inputs['light'], self.next_waypoint)
 
-        # TODO: Update state
-        self.lastState = self.state
-        self.state = (str(inputs), deadline, self.next_waypoint, str(action or ''))
-        #print "State: ", self.state;
-        
-        # TODO: Learn policy based on state, action, reward
+        # TODO: Learn policy based on current & previous state, previous action, reward got during state transition
         self.learnDrive()
+        
+        # TODO: Select action according to your policy and current state
+        self.action = self.takeAction()
 
         # Execute action and get reward
-        self.reward = self.env.act(self, action)
-
+        self.reward = self.env.act(self, self.action)
+        self.lastState = self.state
+        self.lastAction = self.action
         #print "LearningAgent.update(): deadline = {}, inputs = {}, action = {}, reward = {}".format(deadline, inputs, action, self.reward)  # [debug]
 
     def learnDrive(self):
-        ### Q(lastState + lastAction) <-Alfa- reward + Gamma * max{Q(currentState + AllActions)}
-        lastQ = self.queryQ(self.lastState)
+        ### Q(lastState,lastAction) <-Alfa- reward + Gamma * max{Q(currentState,AllActions)}
+        lastQ = self.queryQ((self.lastState, self.lastAction))
         
         # find maxQ for all actions for current state
         maxQ = 0
-        l = list(self.state)
         for i_action in Environment.valid_actions:
-            l[-1] = str(i_action or '')
-            maxQ = max(maxQ, self.queryQ(tuple(l)))
+            maxQ = max(maxQ, self.queryQ((self.state, i_action)))
 
         # update Q
-        self.Q[self.lastState] = lastQ * (1 - LearningAgent.ALFA) + LearningAgent.ALFA * (self.reward + LearningAgent.GAMMA * maxQ)
-        #print self.Q[self.lastState], " ---- Q of ----> ", self.lastState
+        self.Q[(self.lastState, self.lastAction)] = lastQ * (1 - LearningAgent.ALFA) + LearningAgent.ALFA * (self.reward + LearningAgent.GAMMA * maxQ)
 
-    def queryQ(self, sin):
-        if sin == None: return 0
-        return self.Q.setdefault(sin, 0) # if not contain the key, init it with 0
+    def queryQ(self, state_action_pair):
+        if state_action_pair == None: return self.qInit
+        return self.Q.setdefault(state_action_pair, self.qInit) # if not contain the key, init it with self.qInit
 
-    def takeAction(self, l):
+    def takeAction(self):
         epsilon = self.EPSON + self.kEpson * self.t
         draw = random.random()
         #print "draw = ", draw
@@ -80,16 +81,13 @@ class LearningAgent(Agent):
             return random.choice(Environment.valid_actions)
         else:
             #print "choose to use learned"
-            maxQ = None
+            maxQ = -9999
             maxAction = None
-            first = True
             for i_action in Environment.valid_actions:
-                l[-1] = str(i_action or '')
-                curQ = self.queryQ(tuple(l))
-                if first or maxQ < curQ :
+                curQ = self.queryQ((self.state, i_action))
+                if maxQ < curQ :
                     maxQ = curQ
                     maxAction = i_action
-                    first = False
             return maxAction
 
 
