@@ -16,7 +16,7 @@ class LearningAgent(Agent):
         # TODO: Initialize any additional variables here
         self.EPSON = 0.1     # Explore Probability
         self.nTrials = 100
-        self.kEpson = -0.008 # Epson dcrease slope
+        self.kEpson = -0.01 # Epson dcrease slope
         self.qInit = 2 # Q table initial values
 
         self.lastState = None
@@ -42,7 +42,7 @@ class LearningAgent(Agent):
         deadline = self.env.get_deadline(self)
 
         # TODO: Update state && state defination
-        self.state = (inputs['light'], inputs['oncoming'], inputs['left'], self.next_waypoint)
+        self.state = (inputs['light'], self.next_waypoint)
 
         # TODO: Learn policy based on current & previous state, previous action, reward got during state transition
         self.learnDrive()
@@ -111,7 +111,7 @@ def run():
     # sim = Simulator(e, update_delay=1, display=True)
     # sim.run(n_trials=3)
 
-    #Analysis
+    # Analysis
     # print "DEADLINE TRACK: \n", e.track_deadline
     # print "NET REWARD TRACK: \n", e.track_net_reward
 
